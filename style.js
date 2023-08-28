@@ -7,6 +7,10 @@ const btnSalvar = document.querySelector('#btnSalvar')
 const getItensBD = () => JSON.parse(localStorage.getItem('dbfunc')) ?? []
 const setItensBD = () => localStorage.setItem('dbfunc', JSON.stringify(itens))
 const downloadJSONButton = document.getElementById('downloadJSONButton');
+const deleteButtons = document.querySelectorAll('.acao-excluir button');
+
+
+
 
 
 let id
@@ -130,28 +134,34 @@ btnSalvar.onclick = e => {
 
   save(itens); 
 }
-function deleteItemById(idToDelete) {
+function deleteItemById(index) {
   const confirmDelete = confirm("Tem certeza que deseja apagar este item?");
-  
+
   if (confirmDelete) {
-      fetch(`/delete/${idToDelete}`, {
-          method: 'DELETE',
-          headers: {
-              'Content-Type': 'application/json'
-          }
-      })
-      .then(response => response.json())
-      .then(result => {
-          console.log(result.message);
-          loadItens();
-      })
-      .catch(error => {
-          console.error('Erro ao excluir item:', error);
-      });
+    const itemIdToDelete = itens[index].id; 
+    fetch(`/delete/${itemIdToDelete}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(result => {
+      console.log(result.message);
+      loadItens();
+    })
+    .catch(error => {
+      console.error('Erro ao excluir item:', error);
+    });
   }
 }
 
 
+deleteButtons.forEach((button, index) => {
+  button.addEventListener('click', () => {
+    deleteItemById(index); 
+  });
+});
 
 
 
