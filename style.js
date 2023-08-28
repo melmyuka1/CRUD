@@ -12,6 +12,13 @@ const downloadJSONButton = document.getElementById('downloadJSONButton');
 let id
 let itens =  [];
 
+
+const generateUniqueId = () => {
+  return Math.random().toString(36).substring(2) + Date.now().toString(36);
+};
+
+
+
 // Carrega os itens do arquivo dados.json
 const getItensBDFromFile = async () => {
   try {
@@ -69,11 +76,8 @@ function editItem(index) {
   openModal(true, index)
 }
 
-function deleteItem(index) {
-  itens.splice(index, 1)
-  setItensBD()
-  loadItens()
-}
+
+
 
 function insertItem(item, index) {
   let tr = document.createElement('tr')
@@ -86,11 +90,16 @@ function insertItem(item, index) {
       <button onclick="editItem(${index})"><i class='bx bx-edit' ></i></button>
     </td>
     <td class="acao">
-      <button onclick="deleteItem(${index})"><i class='bx bx-trash'></i></button>
+      <button onclick="deleteItemById(this.getAttribute('data-index'))" data-index="${index}">
+        <i class='bx bx-trash'></i>
+      </button>
     </td>
-  `
-  tbody.appendChild(tr)
+  `;
+  tbody.appendChild(tr);
 }
+
+
+
 
 btnSalvar.onclick = e => {
   
@@ -99,13 +108,18 @@ btnSalvar.onclick = e => {
   }
 
   e.preventDefault();
-
   if (id !== undefined) {
-    itens[id].nome = sNome.value
-    itens[id].funcao = sFuncao.value
-    itens[id].salario = sSalario.value
+    itens[id].nome = sNome.value;
+    itens[id].funcao = sFuncao.value;
+    itens[id].salario = sSalario.value;
   } else {
-    itens.push({'nome': sNome.value, 'funcao': sFuncao.value, 'salario': sSalario.value})
+    const newItem = {
+      'id': generateUniqueId(),
+      'nome': sNome.value,
+      'funcao': sFuncao.value,
+      'salario': sSalario.value
+    };
+    itens.push(newItem);
   }
 
   setItensBD()
@@ -116,6 +130,33 @@ btnSalvar.onclick = e => {
 
   save(itens); 
 }
+function deleteItemById(idToDelete) {
+  const confirmDelete = confirm("Tem certeza que deseja apagar este item?");
+  
+  if (confirmDelete) {
+      fetch(`/delete/${idToDelete}`, {
+          method: 'DELETE',
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      })
+      .then(response => response.json())
+      .then(result => {
+          console.log(result.message);
+          loadItens();
+      })
+      .catch(error => {
+          console.error('Erro ao excluir item:', error);
+      });
+  }
+}
+
+
+
+
+
+
+
 
 function loadFromJSONFile() {
   fetch('dados.json')
@@ -128,6 +169,10 @@ function loadFromJSONFile() {
       console.error('Erro ao carregar dados do arquivo JSON:', error);
     });
 }
+
+
+
+
 
 loadItens()
 
