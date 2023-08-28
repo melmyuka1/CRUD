@@ -6,11 +6,41 @@ const sSalario = document.querySelector('#m-salario')
 const btnSalvar = document.querySelector('#btnSalvar')
 const getItensBD = () => JSON.parse(localStorage.getItem('dbfunc')) ?? []
 const setItensBD = () => localStorage.setItem('dbfunc', JSON.stringify(itens))
-
+const downloadJSONButton = document.getElementById('downloadJSONButton');
 
 
 let id
-let itens = getItensBD();
+let itens =  [];
+
+// Carrega os itens do arquivo dados.json
+const getItensBDFromFile = async () => {
+  try {
+      const response = await fetch('dados.json');
+      const jsonData = await response.json();
+      return jsonData || [];
+  } catch (error) {
+      console.error('Erro ao ler os dados do arquivo JSON:', error);
+      return [];
+  }
+};
+
+const save = (data) => {
+  fetch('/save', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+      console.log(result.message); // Mensagem de sucesso do servidor
+  })
+  .catch(error => {
+      console.error('Erro ao salvar os dados no servidor:', error);
+  });
+};
+
 
 function openModal(edit = false, index = 0) {
   modal.classList.add('active')
@@ -84,35 +114,8 @@ btnSalvar.onclick = e => {
   loadItens()
   id = undefined
 
-  saveToServer(itens); 
+  save(itens); 
 }
-
-function saveToJSONFile(data) {
-  const jsonData = JSON.stringify(data, null, 2);
-  const blob = new Blob([jsonData], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'dados.json';
-
-  
-  a.click();
-
-  document.body.removeChild(a);
-}
-
-
-
-
-const downloadJSONButton = document.getElementById('downloadJSONButton');
-
-
-downloadJSONButton.addEventListener('click', () => {
-  saveToJSONFile(itens);
-});
-
-
 
 function loadFromJSONFile() {
   fetch('dados.json')
@@ -126,17 +129,16 @@ function loadFromJSONFile() {
     });
 }
 
-
-function loadItens() {
-  itens = getItensBD()
-  tbody.innerHTML = ''
-  itens.forEach((item, index) => {
-    insertItem(item, index)
-  })
-
-}
-
-
 loadItens()
 
-saveToJSONFile(itens);
+async function loadItens() {
+  try {
+    itens = await getItensBDFromFile();
+    tbody.innerHTML = '';
+    itens.forEach((item, index) => {
+        insertItem(item, index);
+    });
+  } catch (error) {
+    console.error('Erro ao carregar os itens:', error);
+  }
+}
