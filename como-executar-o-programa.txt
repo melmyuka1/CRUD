@@ -1,0 +1,19 @@
+>Para executar o programa você precisa ter o node.js instalado em sua maquina<
+
+1.Primeiro precisamos instalar o servidor, para isso abra o terminal
+você pode abri-lo clicando nos 3 risquinhos no canto superior esquerdo 
+da tela e em seguida clicar em terminal, ou usando o atalaho (shift+ ctrl + '')
+
+2.Após abrir o terminal e acessar o diretorio do projeto digite o seguinte
+código ' npm install express '
+
+3. Após concluir a instalação digite o comando ' node servidor.js ' em seguida
+vai aparecer o link do projeto no terminal ' http://localhost:3333 ' 
+você pode acessa-lo colando o endereço no navegador ou colocando o mouse
+sobre o endereço que aparece no terminal clicando no endereço enquanto mantem a tecla ctrl 
+pressionada
+
+4.após preencher o formulario os dados preenchidos vao estar no arquivo ' dados.json' assim 
+se excluidos sumiram, ou editados apareceram como foram deixados
+
+5. para desligar basta abrir o termal novamente e apertar ctrl + c ou fechar o vs code

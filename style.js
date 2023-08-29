@@ -1,3 +1,4 @@
+//variaveis
 const modal = document.querySelector('.modal-container')
 const tbody = document.querySelector('tbody')
 const sNome = document.querySelector('#m-nome')
@@ -16,6 +17,7 @@ const deleteButtons = document.querySelectorAll('.acao-excluir button');
 let id
 let itens =  [];
 
+//gera um id
 
 const generateUniqueId = () => {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
@@ -34,7 +36,7 @@ const getItensBDFromFile = async () => {
       return [];
   }
 };
-
+//salva os dados no Servidor
 const save = (data) => {
   fetch('/save', {
       method: 'POST',
@@ -45,14 +47,14 @@ const save = (data) => {
   })
   .then(response => response.json())
   .then(result => {
-      console.log(result.message); // Mensagem de sucesso do servidor
+      console.log(result.message); 
   })
   .catch(error => {
       console.error('Erro ao salvar os dados no servidor:', error);
   });
 };
 
-
+//abre a modal
 function openModal(edit = false, index = 0) {
   modal.classList.add('active')
 
@@ -74,7 +76,7 @@ function openModal(edit = false, index = 0) {
   }
   
 }
-
+//edita o conteudo
 function editItem(index) {
 
   openModal(true, index)
@@ -82,7 +84,7 @@ function editItem(index) {
 
 
 
-
+//insere o conteudo na parte visual do site
 function insertItem(item, index) {
   let tr = document.createElement('tr')
 
@@ -104,7 +106,7 @@ function insertItem(item, index) {
 
 
 
-
+//salva os itens
 btnSalvar.onclick = e => {
   
   if (sNome.value == '' || sFuncao.value == '' || sSalario.value == '') {
@@ -134,6 +136,8 @@ btnSalvar.onclick = e => {
 
   save(itens); 
 }
+
+//delete os itens (puxa o dado JSON com abse no id gerado)
 function deleteItemById(index) {
   const confirmDelete = confirm("Tem certeza que deseja apagar este item?");
 
@@ -167,7 +171,7 @@ deleteButtons.forEach((button, index) => {
 
 
 
-
+//carrega os dados em JSON
 function loadFromJSONFile() {
   fetch('dados.json')
     .then(response => response.json())

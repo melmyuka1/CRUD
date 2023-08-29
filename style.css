@@ -88,7 +88,7 @@ button {
 
 .divTable::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background-color: darkgray; 
+  background-color:  rgb(108, 108, 228); 
 }
 
 table {
@@ -248,4 +248,18 @@ td button i {
 
 td button i:first-child {
   margin-right: 10px;
+}
+.salvarbtn {
+  font-size: 16px;
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+  color: white;
+  background-color: rgb(57, 57, 226);
+  transition: background-color 0.3s ease;
+}
+
+.salvarbtn:hover
+{
+  background-color: rgb(108, 108, 228);
 }

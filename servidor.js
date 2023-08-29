@@ -51,5 +51,6 @@ app.delete('/delete/:id', (req, res) => {
 
 const PORT = 3333;
 app.listen(PORT, () => {
+    console.log(`Aperte crtl + c para desligar o servidor`)
     console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
